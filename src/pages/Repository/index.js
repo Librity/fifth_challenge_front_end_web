@@ -5,13 +5,14 @@ import PropTypes from 'prop-types';
 import api from '../../services/api';
 
 import Container from '../../components/Container';
-import { Loading, Owner, IssueList } from './styles';
+import { Loading, Owner, FilterBar, FilterButton, IssueList } from './styles';
 
 export default class Repository extends Component {
   constructor() {
     super();
 
     this.state = {
+      repoName: '',
       repo: {},
       issues: [],
       loading: true,
@@ -37,11 +38,15 @@ export default class Repository extends Component {
     ]);
 
     this.setState({
+      repoName,
       repo: repo.data,
       issues: issues.data,
       loading: false,
     });
   }
+
+  // showOpenIssues = () => {};
+  // showClosedIssues = () => {};
 
   render() {
     const { repo, issues, loading } = this.state;
@@ -49,6 +54,16 @@ export default class Repository extends Component {
     if (loading) {
       return <Loading>Loading...</Loading>;
     }
+
+    const showAllIssues = async currentState => {
+      const { repoName } = currentState;
+      const response = await api.get(`/repos/${repoName}/issues?state=all`, {
+        params: { per_page: 30 },
+      });
+      console.log(response);
+
+      this.setState({ repoName, repo, issues: response.data, loading });
+    };
 
     return (
       <Container>
@@ -58,6 +73,12 @@ export default class Repository extends Component {
           <h1>{repo.name}</h1>
           <p>{repo.description}</p>
         </Owner>
+
+        <FilterBar>
+          <FilterButton onClick={this.showAllIssues}>All</FilterButton>
+          {/* <FilterButton onClick={this.showOpenIssues}>Open</FilterButton> */}
+          {/* <FilterButton onClick={this.showClosedIssues}>Closed</FilterButton> */}
+        </FilterBar>
 
         <IssueList>
           {issues.map(issue => (

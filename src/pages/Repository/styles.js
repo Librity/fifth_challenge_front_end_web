@@ -14,6 +14,7 @@ export const Owner = styled.header`
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-bottom: 1px solid #eee;
 
   a {
     color: #7159c1;
@@ -34,6 +35,7 @@ export const Owner = styled.header`
 
   p {
     margin-top: 5px;
+    margin-bottom: 5px;
     font-size: 14px;
     color: #666;
     line-height: 1.4;
@@ -41,11 +43,31 @@ export const Owner = styled.header`
     max-width: 400px;
   }
 `;
+  
+export const FilterBar = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+`;
+
+export const FilterButton = styled.button`
+  background: #7159c1;
+  border: 0;
+  padding: 10px 10px;
+  margin-right: 10px;
+  border-radius: 4px;
+  color: #fff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 export const IssueList = styled.ul`
-  padding-top: 30px;
-  margin-top: 30px;
-  border-top: 1px solid #eee;
+  padding-top: 0px;
+  margin-top: 15px;
   list-style: none;
 
   li {

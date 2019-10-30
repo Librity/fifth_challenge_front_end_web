@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
 import Container from '../../components/Container';
-import { Form, SubmitButton, List, Input } from './styles';
+import { Form, SubmitButton, Input, List } from './styles';
 
 export default class Main extends Component {
   constructor() {
@@ -70,7 +70,7 @@ export default class Main extends Component {
       });
     } catch (err) {
       console.log(err);
-      
+
       this.setState({ loading: false, loadingError: err });
     }
   };
