@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
 import Container from '../../components/Container';
-import { Form, SubmitButton, List } from './styles';
+import { Form, SubmitButton, List, Input } from './styles';
 
 export default class Main extends Component {
   constructor() {
@@ -15,6 +15,7 @@ export default class Main extends Component {
       newRepo: '',
       repos: [],
       loading: false,
+      loadingError: '',
     };
   }
 
@@ -43,23 +44,31 @@ export default class Main extends Component {
 
     this.setState({ loading: true });
 
-    const { newRepo, repos } = this.state;
+    const { newRepo, repos, loadingError } = this.state;
 
-    const response = await api.get(`/repos/${newRepo}`);
+    try {
+      const response = await api.get(`/repos/${newRepo}`);
 
-    const data = {
-      name: response.data.full_name,
-    };
+      if (loadingError) {
+        this.setState({ loadingError: '' });
+      }
 
-    this.setState({
-      repos: [...repos, data],
-      newRepo: '',
-      loading: false,
-    });
+      const data = {
+        name: response.data.full_name,
+      };
+
+      this.setState({
+        repos: [...repos, data],
+        newRepo: '',
+        loading: false,
+      });
+    } catch (err) {
+      this.setState({ loading: false, loadingError: err });
+    }
   };
 
   render() {
-    const { newRepo, loading, repos } = this.state;
+    const { newRepo, loading, repos, loadingError } = this.state;
 
     return (
       <Container>
@@ -68,12 +77,13 @@ export default class Main extends Component {
           GitHub Repos
         </h1>
 
-        <Form onSubmit={this.handleSubmit}>
-          <input
+        <Form onSubmit={this.handleSubmit} >
+          <Input
             type="text"
             placeholder="Add a repo"
             value={newRepo}
             onChange={this.handleInputChange}
+            loadingError={loadingError}
           />
           <SubmitButton loading={loading}>
             {loading ? (
