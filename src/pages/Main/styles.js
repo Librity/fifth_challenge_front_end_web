@@ -41,7 +41,6 @@ export const Input = styled.input.attrs(props => ({
     props.loadingError &&
     css`
       border: 1px solid red;
-      color: red;
     `}
 `;
 

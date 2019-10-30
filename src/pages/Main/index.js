@@ -47,6 +47,12 @@ export default class Main extends Component {
     const { newRepo, repos, loadingError } = this.state;
 
     try {
+      repos.forEach(repo => {
+        if (repo.name === newRepo) {
+          throw new Error('Repo already added to list');
+        }
+      });
+
       const response = await api.get(`/repos/${newRepo}`);
 
       if (loadingError) {
@@ -63,6 +69,8 @@ export default class Main extends Component {
         loading: false,
       });
     } catch (err) {
+      console.log(err);
+      
       this.setState({ loading: false, loadingError: err });
     }
   };
@@ -77,7 +85,7 @@ export default class Main extends Component {
           GitHub Repos
         </h1>
 
-        <Form onSubmit={this.handleSubmit} >
+        <Form onSubmit={this.handleSubmit}>
           <Input
             type="text"
             placeholder="Add a repo"
