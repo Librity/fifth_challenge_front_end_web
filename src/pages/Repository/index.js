@@ -8,19 +8,15 @@ import Container from '../../components/Container';
 import { Loading, Owner, IssueList } from './styles';
 
 export default class Repository extends Component {
-  static propTypes = {
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        repo: PropTypes.string,
-      }),
-    }).isRequired,
-  };
+  constructor() {
+    super();
 
-  state = {
-    repo: {},
-    issues: [],
-    loading: true,
-  };
+    this.state = {
+      repo: {},
+      issues: [],
+      loading: true,
+    };
+  }
 
   async componentDidMount() {
     const { match } = this.props;
@@ -83,3 +79,11 @@ export default class Repository extends Component {
     );
   }
 }
+
+Repository.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      repo: PropTypes.string,
+    }),
+  }).isRequired,
+};
