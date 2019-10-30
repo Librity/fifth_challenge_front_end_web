@@ -24,9 +24,6 @@ export default class Repository extends Component {
 
     const repoName = decodeURIComponent(match.params.repo);
 
-    // api/github.com/repos/facebook/react/
-    // api/github.com/repos/facebook/react/issues
-
     const [repo, issues] = await Promise.all([
       api.get(`/repos/${repoName}`),
       api.get(`/repos/${repoName}/issues`, {
@@ -45,8 +42,20 @@ export default class Repository extends Component {
     });
   }
 
-  // showOpenIssues = () => {};
-  // showClosedIssues = () => {};
+  filterIssues = async statusFilter => {
+    const { repoName } = this.state;
+
+    this.setState({ loading: true });
+
+    const response = await api.get(
+      `/repos/${repoName}/issues?state=${statusFilter}`,
+      {
+        params: { per_page: 30 },
+      }
+    );
+
+    this.setState({ issues: response.data, loading: false });
+  };
 
   render() {
     const { repo, issues, loading } = this.state;
@@ -54,16 +63,6 @@ export default class Repository extends Component {
     if (loading) {
       return <Loading>Loading...</Loading>;
     }
-
-    const showAllIssues = async currentState => {
-      const { repoName } = currentState;
-      const response = await api.get(`/repos/${repoName}/issues?state=all`, {
-        params: { per_page: 30 },
-      });
-      console.log(response);
-
-      this.setState({ repoName, repo, issues: response.data, loading });
-    };
 
     return (
       <Container>
@@ -75,9 +74,15 @@ export default class Repository extends Component {
         </Owner>
 
         <FilterBar>
-          <FilterButton onClick={this.showAllIssues}>All</FilterButton>
-          {/* <FilterButton onClick={this.showOpenIssues}>Open</FilterButton> */}
-          {/* <FilterButton onClick={this.showClosedIssues}>Closed</FilterButton> */}
+          <FilterButton onClick={() => this.filterIssues('all')}>
+            All
+          </FilterButton>
+          <FilterButton onClick={() => this.filterIssues('open')}>
+            Open
+          </FilterButton>
+          <FilterButton onClick={() => this.filterIssues('closed')}>
+            Closed
+          </FilterButton>
         </FilterBar>
 
         <IssueList>
