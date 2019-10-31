@@ -43,12 +43,12 @@ export const Owner = styled.header`
     max-width: 400px;
   }
 `;
-  
+
 export const FilterBar = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  justify-content: left;
+  align-items: left;
   margin-top: 15px;
 `;
 
@@ -122,4 +122,38 @@ export const IssueList = styled.ul`
       color: #999;
     }
   }
+`;
+
+export const PageBar = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 15px;
+`;
+
+export const PageButtonPrevious = styled.button.attrs(props => ({
+  type: 'previousPage',
+  disabled: props.disabled,
+}))`
+  background: #7159c1;
+  border: 0;
+  padding: 10px 10px;
+  margin-right: 10px;
+  border-radius: 4px;
+  color: #fff;
+
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+    background: #eee;
+  }
+`;
+
+export const PageButtonNext = styled.button`
+  background: #7159c1;
+  border: 0;
+  padding: 10px 10px;
+  margin-right: 10px;
+  border-radius: 4px;
+  color: #fff;
 `;

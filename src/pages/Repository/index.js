@@ -5,7 +5,17 @@ import PropTypes from 'prop-types';
 import api from '../../services/api';
 
 import Container from '../../components/Container';
-import { Loading, Owner, FilterBar, FilterButton, IssueList } from './styles';
+import {
+  Loading,
+  Owner,
+  FilterBar,
+  FilterButton,
+  IssueList,
+  PageBar,
+  PageButtonPrevious,
+  PageButtonNext,
+  PageIndex,
+} from './styles';
 
 export default class Repository extends Component {
   constructor() {
@@ -15,11 +25,15 @@ export default class Repository extends Component {
       repoName: '',
       repo: {},
       issues: [],
+      stateFilter: 'all',
+      issuesPage: 1,
+      isFirstPage: true,
       loading: true,
     };
   }
 
   async componentDidMount() {
+    const { stateFilter } = this.state;
     const { match } = this.props;
 
     const repoName = decodeURIComponent(match.params.repo);
@@ -28,7 +42,7 @@ export default class Repository extends Component {
       api.get(`/repos/${repoName}`),
       api.get(`/repos/${repoName}/issues`, {
         params: {
-          state: 'open',
+          state: stateFilter,
           per_page: 5,
         },
       }),
@@ -38,27 +52,51 @@ export default class Repository extends Component {
       repoName,
       repo: repo.data,
       issues: issues.data,
+      issuesPage: 1,
       loading: false,
     });
   }
 
-  filterIssues = async statusFilter => {
+  filterIssues = async stateFilter => {
     const { repoName } = this.state;
+
+    this.setState({ loading: true, isFirstPage: true });
+
+    const response = await api.get(
+      `/repos/${repoName}/issues?state=${stateFilter}&page=1`,
+      {
+        params: { per_page: 5 },
+      }
+    );
+
+    this.setState({ issues: response.data, loading: false, stateFilter });
+  };
+
+  changePage = async issuesPage => {
+    const { repoName, stateFilter } = this.state;
+    let { isFirstPage } = this.state;
+
+    isFirstPage = issuesPage <= 1;
 
     this.setState({ loading: true });
 
     const response = await api.get(
-      `/repos/${repoName}/issues?state=${statusFilter}`,
+      `/repos/${repoName}/issues?state=${stateFilter}&page=${issuesPage}`,
       {
-        params: { per_page: 30 },
+        params: { per_page: 5 },
       }
     );
 
-    this.setState({ issues: response.data, loading: false });
+    this.setState({
+      issues: response.data,
+      loading: false,
+      issuesPage,
+      isFirstPage,
+    });
   };
 
   render() {
-    const { repo, issues, loading } = this.state;
+    const { repo, issues, loading, issuesPage, isFirstPage } = this.state;
 
     if (loading) {
       return <Loading>Loading...</Loading>;
@@ -101,6 +139,19 @@ export default class Repository extends Component {
             </li>
           ))}
         </IssueList>
+
+        <PageBar>
+          <PageButtonPrevious
+            disabled={isFirstPage}
+            onClick={() => this.changePage(issuesPage - 1)}
+          >
+            ...previous
+          </PageButtonPrevious>
+          {/* <PageIndex>{issuesPage}</PageIndex> */}
+          <PageButtonNext onClick={() => this.changePage(issuesPage + 1)}>
+            next...
+          </PageButtonNext>
+        </PageBar>
       </Container>
     );
   }
