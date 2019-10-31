@@ -1,5 +1,12 @@
 import styled from 'styled-components';
 
+const hoverStyling = styled.button`  border: 1px solid #7159c1;
+&:hover {
+  background: #fff;
+  color: #7159c1;
+  border-radius: 4px;
+}`;
+
 export const Loading = styled.div`
   color: #fff;
   font-size: 30px;
@@ -52,9 +59,8 @@ export const FilterBar = styled.div`
   margin-top: 15px;
 `;
 
-export const FilterButton = styled.button`
+export const FilterButton = styled(hoverStyling)`
   background: #7159c1;
-  border: 0;
   padding: 10px 10px;
   margin-right: 10px;
   border-radius: 4px;
@@ -129,14 +135,15 @@ export const PageBar = styled.div`
   flex-direction: row;
   justify-content: space-between;
   margin-top: 15px;
+  border: 1px solid #eee;
+  border-radius: 4px;
 `;
 
-export const PageButtonPrevious = styled.button.attrs(props => ({
+export const PageButtonPrevious = styled(hoverStyling).attrs(props => ({
   type: 'previousPage',
   disabled: props.disabled,
 }))`
   background: #7159c1;
-  border: 0;
   padding: 10px 10px;
   margin-right: 10px;
   border-radius: 4px;
@@ -146,14 +153,24 @@ export const PageButtonPrevious = styled.button.attrs(props => ({
     cursor: not-allowed;
     opacity: 0.6;
     background: #eee;
+    color: #fff;
   }
 `;
 
-export const PageButtonNext = styled.button`
-  background: #7159c1;
-  border: 0;
+export const PageIndex = styled.h3`
+  background: #fff;
   padding: 10px 10px;
   margin-right: 10px;
   border-radius: 4px;
+  color: #999;
+`;
+
+export const PageButtonNext = styled(hoverStyling)`
+  background: #7159c1;
+  padding: 10px 10px;
+  margin-right: 0px;
+  border-radius: 4px;
   color: #fff;
+
+  {hoverStylying}
 `;

@@ -1,5 +1,14 @@
 import styled, { keyframes, css } from 'styled-components';
 
+const hoverStyling = styled.button`
+  border: 1px solid #7159c1;
+  &:hover {
+    background: #fff;
+    color: #7159c1;
+    border-radius: 4px;
+  }
+`;
+
 export const Container = styled.div`
   max-width: 700px;
   background: #fff;
@@ -53,15 +62,16 @@ const rotate = keyframes`
   }
 `;
 
-export const SubmitButton = styled.button.attrs(props => ({
+export const SubmitButton = styled(hoverStyling).attrs(props => ({
   type: 'submit',
   disabled: props.loading,
 }))`
   background: #7159c1;
-  border: 0;
   padding: 0 10px;
   margin-left: 10px;
   border-radius: 4px;
+
+  color: #fff;
 
   display: flex;
   justify-content: center;

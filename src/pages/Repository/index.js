@@ -147,7 +147,7 @@ export default class Repository extends Component {
           >
             ...previous
           </PageButtonPrevious>
-          {/* <PageIndex>{issuesPage}</PageIndex> */}
+          <PageIndex>{issuesPage}</PageIndex>
           <PageButtonNext onClick={() => this.changePage(issuesPage + 1)}>
             next...
           </PageButtonNext>
